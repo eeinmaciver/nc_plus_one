@@ -1,5 +1,5 @@
 import pytest
-from db.seed import seed, format_user_data
+from db.user_seed import seed, format_user_data
 
 
 def test_seed_function():

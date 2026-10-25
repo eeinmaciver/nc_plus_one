@@ -2,7 +2,7 @@ import psycopg
 
 def drop_rsvp_table(connection):
 
-    drop_rsvps = "DROP TABLE IF EXISTS rsvps"
+    drop_rsvps = "DROP TABLE IF EXISTS rsvps;"
 
     with connection.cursor() as cur:
             cur.execute(drop_rsvps)
@@ -14,7 +14,7 @@ def create_rsvp_table(connection):
     create_rsvps = """CREATE TABLE rsvps (
     rsvp_id SERIAL PRIMARY KEY,
     attendee_id INTEGER REFERENCES users(user_id),
-    event_id INTEGER REFERENCES venues(venue_id),
+    event_id INTEGER REFERENCES events(event_id),
     created_at TIMESTAMPTZ DEFAULT NOW()
 );"""
 
@@ -27,11 +27,11 @@ def seed_rsvp_table(connection, rsvps):
 
     insert_rsvps = """
                 INSERT INTO rsvps
-                (attendee_id, event_id, created_at)
+                (attendee_id, event_id)
                 VALUES
-                (%s, %s, %s)"""
+                (%s, %s);"""
 
     with connection.cursor() as cur:
-        cur.executemany(insert_rsvps, [(rsvp["attendee_id"], rsvp["event_id"], rsvp["created_at"]) for rsvp in rsvps])
+        cur.executemany(insert_rsvps, [(rsvp["attendee_id"], rsvp["event_id"]) for rsvp in rsvps])
 
     connection.commit()

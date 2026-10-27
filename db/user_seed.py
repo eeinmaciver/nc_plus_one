@@ -1,4 +1,8 @@
 import psycopg
+import bcrypt
+
+def hash_password(plain: str) -> str:
+    return bcrypt.hashpw(plain.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 def drop_user_table(connection):
 
@@ -33,6 +37,6 @@ def seed_user_table(connection, users):
                 (%s, %s, %s)"""
 
     with connection.cursor() as cur:
-        cur.executemany(insert_users, [(user["name"], user["email"], user["password"]) for user in users])
+        cur.executemany(insert_users, [(user["name"], user["email"], hash_password(user["password"])) for user in users])
 
     connection.commit()

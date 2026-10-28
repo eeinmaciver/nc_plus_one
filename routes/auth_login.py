@@ -17,11 +17,18 @@ TOKEN_TIME = 1
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 class LoginRequest(BaseModel):
-    email: str
-    password: str
+    email: str | None = None
+    password: str | None = None
 
 @router.post("/login")
 def post_auth_login(body: LoginRequest): #parse JSON and check if email and password are present
+
+    #raise 400 response for empty email or password
+    if not body.email or not body.password:
+        raise HTTPException(
+            status_code=400,
+            detail={"message": "Email and password required for log in"}
+        )
 
     #look up user in the database
     conn = get_connection()
@@ -46,7 +53,6 @@ def post_auth_login(body: LoginRequest): #parse JSON and check if email and pass
     #build the token
     payload = {
         "sub": str(row[0]),
-        "email": row[2],
         "exp": datetime.now(timezone.utc) + timedelta(hours=TOKEN_TIME),
     }
     token = jwt.encode(payload, SECRET, algorithm=ALGORITHM)

@@ -5,19 +5,25 @@ from fastapi import APIRouter, HTTPException
 from db.connection import get_connection
 from pydantic import BaseModel
 from datetime import datetime, timedelta, timezone
+from dotenv import load_dotenv
 
+#load env into os.environ, set signing algorithm & token time
+load_dotenv(".env.development")
+SECRET = os.environ["JWT_SECRET"]
+ALGORITHM = "HS256"
+TOKEN_TIME = 1
+
+#create router that starts with /auth
 router = APIRouter(prefix="/auth", tags=["auth"])
-
-JWT_SECRET = os.eniron["JWT_SECRET"]
-JWT_ALGORITHM = "HS256"
-TOKEN_LIFETIME_HOURS = 1
 
 class LoginRequest(BaseModel):
     email: str
     password: str
 
 @router.post("/login")
-def post_auth_login(body: LoginRequest):
+def post_auth_login(body: LoginRequest): #parse JSON and check if email and password are present
+
+    #look up user in the database
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute(
@@ -27,7 +33,8 @@ def post_auth_login(body: LoginRequest):
     row = cursor.fetchone()
     cursor.close()
     conn.close()
-
+    
+    #check user credentials
     if row is None or not bcrypt.checkpw(
         body.password.encode("utf-8"), row[3].encode("utf-8")
     ):
@@ -36,10 +43,13 @@ def post_auth_login(body: LoginRequest):
             detail={"message": "Email not found or password incorrect"}
         )
 
+    #build the token
     payload = {
         "sub": str(row[0]),
-        "exp": datetime.now(timezone.utc) + timedelta(hours=TOKEN_LIFETIME_HOURS),
+        "email": row[2],
+        "exp": datetime.now(timezone.utc) + timedelta(hours=TOKEN_TIME),
     }
-    token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+    token = jwt.encode(payload, SECRET, algorithm=ALGORITHM)
 
+    #return token
     return {"token": token}

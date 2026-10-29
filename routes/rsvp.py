@@ -12,7 +12,7 @@ def create_user_rsvp(event_id: int, user_id:int = Depends(get_user_id)):
     
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT 1 FROM events WHERE event_id = %s", (event_id,))
+        cursor.execute("SELECT 1 FROM events WHERE event_id = %s;", (event_id,))
         if cursor.fetchone() is None:
             raise HTTPException(status_code=404, detail="Event not found")
 
@@ -20,7 +20,7 @@ def create_user_rsvp(event_id: int, user_id:int = Depends(get_user_id)):
             cursor.execute(
                 """INSERT INTO rsvps (attendee_id, event_id)
                 VALUES (%s, %s)
-                RETURNING rsvp_id, attendee_id, event_id, created_at""",
+                RETURNING rsvp_id, attendee_id, event_id, created_at;""",
                 (user_id, event_id),
             )
         except psycopg.errors.UniqueViolation:

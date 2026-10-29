@@ -15,7 +15,8 @@ def create_rsvp_table(connection):
     rsvp_id SERIAL PRIMARY KEY,
     attendee_id INTEGER REFERENCES users(user_id),
     event_id INTEGER REFERENCES events(event_id),
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE (attendee_id, event_id)
 );"""
 
     with connection.cursor() as cur:

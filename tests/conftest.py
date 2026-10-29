@@ -9,7 +9,12 @@ import pytest
 from fastapi.testclient import TestClient
 
 from db.connection import get_connection
+from seed import seed
 from main import app
+
+@pytest.fixture
+def seed_db():
+    seed()
 
 @pytest.fixture
 def client():

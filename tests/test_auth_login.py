@@ -25,10 +25,10 @@ def test_incorrect_password(client):
     response = client.post("/api/auth/login", json={"email": "alice@example.com", "password": "wrongpassword123"})
     assert response.status_code == 401
 
-def test_empty_email_field(client):
+def test_empty_password_field(client):
     response = client.post("/api/auth/login", json={"email": "alice@example.com"})
     assert response.status_code == 400
 
-def test_empty_password_field(client):
+def test_empty_email_field(client):
     response = client.post("/api/auth/login", json={"password": "password123"})
     assert response.status_code == 400

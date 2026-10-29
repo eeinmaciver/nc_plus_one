@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 def get_connection():
 
     env = os.getenv("ENV", "development")
-    load_dotenv(f".env.{env}")
+    load_dotenv(f".env.{env}", override=True)
 
     if not os.getenv("PGDATABASE"):
         raise RuntimeError("PGDATABASE NOT SET")

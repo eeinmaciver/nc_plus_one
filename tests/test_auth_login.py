@@ -15,7 +15,7 @@ def test_signature_with_bad_secret(client):
     # payload = jwt.decode(token, "wrong-secret-is-wrong", algorithms=["HS256"])
     # assert "sub" in payload
     with pytest.raises(jwt.InvalidSignatureError):
-        jwt.decode(token, "wrong-secret-is-wrong-this-not-good", algorithms=["HS256"])
+        jwt.decode(token, "wrong-secret-is-wrong-this-is-not-good", algorithms=["HS256"])
         
 def test_incorrect_email(client):
     response = client.post("/api/auth/login", json={"email": "tomcruise@example.com", "password": "password123"})

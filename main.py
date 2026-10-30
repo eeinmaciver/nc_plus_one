@@ -10,6 +10,7 @@ from routes.post_event import router as post_event_router
 from routes.delete_rsvp import router as delete_rsvp_router
 from routes.patch_event import router as patch_event_router
 from routes.get_attendees import router as get_attendess_router
+from routes.get_user_rsvps import router as get_user_rsvps_router
 
 app = FastAPI(title="NC Plus One", debug=True)
 app.include_router(events_router, prefix="/api")
@@ -20,6 +21,7 @@ app.include_router(post_event_router, prefix="/api")
 app.include_router(delete_rsvp_router, prefix="/api")
 app.include_router(patch_event_router, prefix="/api")
 app.include_router(get_attendess_router, prefix="/api")
+app.include_router(get_user_rsvps_router, prefix="/api")
 
 @app.exception_handler(HTTPException)
 def handle_http_exception(request: Request, exc: HTTPException):

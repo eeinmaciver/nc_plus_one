@@ -22,3 +22,8 @@ def test_auth_user_is_not_organiser_403(client):
 def test_non_existant_event_returns_404(client):
     response = client.get("/api/events/99/attendees", headers=auth())
     assert response.status_code == 404
+
+def test_password_is_not_present_in_response(client):
+    response = client.get("/api/events/1/attendees", headers=auth())
+    password_check = response.json()
+    assert "password" not in password_check["attendees"]

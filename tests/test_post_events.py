@@ -21,3 +21,17 @@ def new_event(**overrides):
 def test_create_event_returns_201_response(client):
     response = client.post("/api/events", json=new_event(), headers=auth())
     assert response.status_code == 201
+
+def test_missing_or_invalid_token_returns_401(client):
+    response = client.post("/api/events", json=new_event())
+    assert response.status_code == 401
+
+def test_missing_field_returns_400_response(client):
+    event = new_event()
+    del event["title"]
+    response = client.post("/api/events", json=event, headers=auth())
+    assert response.status_code == 400
+
+def test_invalid_date_returns_400_response(client):
+    response = client.post("/api/events", json=new_event(starts_at="7 minutes past 12"), headers=auth())
+    assert response.status_code == 400

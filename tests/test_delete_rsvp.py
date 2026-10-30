@@ -7,7 +7,7 @@ def make_token(user_id=1):
 def auth(user_id=1):
     return {"Authorization": f"Bearer {make_token(user_id)}"}
 
-def test_delete_rsvp_returns_204(client, seed_db):
+def test_delete_rsvp_returns_204(client):
     response = client.delete("/api/events/5/rsvp/me", headers=auth(2))
     assert response.status_code == 204
 

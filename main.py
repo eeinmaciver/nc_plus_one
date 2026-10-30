@@ -1,6 +1,6 @@
 from seed import seed
 from fastapi import FastAPI, Request
-from fastapi.exceptions import HTTPException
+from fastapi.exceptions import HTTPException, RequestValidationError
 from fastapi.responses import JSONResponse
 from routes.events import router as events_router
 from routes.auth_login import router as auth_router
@@ -20,6 +20,10 @@ app.include_router(delete_rsvp_router, prefix="/api")
 @app.exception_handler(HTTPException)
 def handle_http_exception(request: Request, exc: HTTPException):
     return JSONResponse(status_code=exc.status_code, content={"error": exc.detail})
+
+@app.exception_handler(RequestValidationError)
+def handle_validation_error(request: Request, exc: RequestValidationError):
+    return JSONResponse(status_code=400, content={"error": "Bad request"})
 
 def main():
     seed()

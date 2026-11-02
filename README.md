@@ -15,4 +15,4 @@ To run the server open a second terminal and run the command uvicorn main:app --
 You can check the JSON response at http://127.0.0.1:8000 and see the endpoint docs at http://127.0.0.1:8000/docs
 
 ### Testing
-When running tests first run ENV=test python main.py in the terminal before running pytest. This reseeds the database each time as some tests rely on creating a new user which will fail when ran for a second time.
+When running tests first run ENV=test python main.py in the terminal before running pytest. This reseeds the database each time as some tests rely on creating a new entry which will fail when ran for a second time.

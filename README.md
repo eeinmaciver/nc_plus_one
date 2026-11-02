@@ -8,4 +8,11 @@ This is only a backend project but I will be taking frontend into consideration 
 To create a new nc_plus_one database and clear any existing info in the table run the command psql -U username -d postgres -f db/setup.sql in the terminal to DROP DATABASE and CREATE DATABASE.
 
 ### Database Conection
-To connect to the database using the connection.py file you will first need to copy the .env.example file and create your own .env with local database credentials.
+To connect to the database using the connection.py file you will first need to copy the .env.example file and create your own .env.development and .env.test with local database credentials.
+
+### Running the API
+To run the server open a second terminal and run the command uvicorn main:app --reload
+You can check the JSON response at http://127.0.0.1:8000 and see the endpoint docs at http://127.0.0.1:8000/docs
+
+### Testing
+When running tests first run ENV=test python main.py in the terminal before running pytest. This reseeds the database each time as some tests rely on creating a new user which will fail when ran for a second time.

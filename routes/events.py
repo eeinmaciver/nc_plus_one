@@ -1,12 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from db.connection import get_connection
+from psycopg.rows import dict_row
 
 router = APIRouter(prefix="/events", tags=["events"])
 
 @router.get("")
 def get_events():
     conn = get_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(row_factory=dict_row)
     cursor.execute(
             "SELECT * FROM events ORDER BY event_id ASC;"
         )
@@ -53,7 +54,7 @@ def get_event_id(event_id: str):
         "description": row[2],
         "starts_at": row[3].isoformat(),
         "ends_at": row[4].isoformat(),
-        "name": row[5],
+        "venue_name": row[5],
         "address": row[6],
         "capacity": row[7],
         "created_at": row[8].isoformat()}

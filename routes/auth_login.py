@@ -27,7 +27,7 @@ def post_auth_login(body: LoginRequest): #parse JSON and check if email and pass
     if not body.email or not body.password:
         raise HTTPException(
             status_code=400,
-            detail={"message": "Email and password required for log in"}
+            detail="Email and password required for log in"
         )
 
     #look up user in the database
@@ -47,7 +47,7 @@ def post_auth_login(body: LoginRequest): #parse JSON and check if email and pass
     ):
         raise HTTPException(
             status_code=401,
-            detail={"message": "Email not found or password incorrect"}
+            detail="Email not found or password incorrect"
         )
 
     #build the token

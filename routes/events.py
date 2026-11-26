@@ -28,14 +28,14 @@ def get_event_id(event_id: str):
         )
 
     conn = get_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(row_factory=dict_row)
     cursor.execute(
-            """SELECT e.event_id, e.title, e.description, e.starts_at, e.ends_at, v.name, v.address, v.capacity, e.created_at
+            """SELECT e.event_id, e.title, e.description, e.starts_at, e.ends_at, v.name AS venue_name, v.address, v.capacity, e.created_at
             FROM events e
-            JOIN venues v ON e.venue_id = v.venue_id
-            WHERE e.event_id = %s
+            LEFT JOIN venues v ON e.venue_id = v.venue_id
+            WHERE e.event_id = %s;
             """,
-            (event_id, )
+            (event_id,),
         )
     row = cursor.fetchone()
     cursor.close()
@@ -47,15 +47,4 @@ def get_event_id(event_id: str):
             detail="Event not found"
         )
 
-    return {
-        "event": 
-        {"event_id": row[0],
-        "title": row[1],
-        "description": row[2],
-        "starts_at": row[3].isoformat(),
-        "ends_at": row[4].isoformat(),
-        "venue_name": row[5],
-        "address": row[6],
-        "capacity": row[7],
-        "created_at": row[8].isoformat()}
-        }
+    return {"event": row}
